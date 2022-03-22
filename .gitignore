@@ -1,0 +1,4 @@
+env/
+.vscode/
+*.cpython-38.pyc
+db.sqlite3
