@@ -4,6 +4,8 @@ from .serializers import RecipeSerializer
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Manage Recipes in the database"""
+
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 

@@ -4,6 +4,7 @@ from core.serializers import RecipeSerializer
 
 class TestSerializer(TestCase):
     def test_recipe_serializer(self):
+        """Test recipe serialization"""
         payload = {
             "name": "Jalapeno poppers",
             "description": "Very american",

@@ -23,6 +23,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
 
     def create(self, validated_data):
+        """Create recipe and associated ingredients"""
         ingredients = validated_data.pop("ingredients", None)
         recipe = Recipe.objects.create(**validated_data)
 
@@ -35,6 +36,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        """Update recipe model and associated ingredients"""
         ingredients = validated_data.pop("ingredients", None)
 
         if ingredients is not None:

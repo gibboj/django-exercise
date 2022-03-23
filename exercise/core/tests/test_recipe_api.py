@@ -12,14 +12,17 @@ RECIPE_URL = reverse("recipe:recipe-list")
 
 
 def recipe_detail_url(recipe_id):
+    """ "Build recipe detail url"""
     return reverse("recipe:recipe-detail", args=[recipe_id])
 
 
 def sample_ingredient(name, recipe):
+    """Create sample ingredient for testing"""
     return Ingredient.objects.create(name=name, recipe=recipe)
 
 
 def sample_recipe(**params):
+    """Create sample recipe for testing"""
     default = {"name": "sample recipe", "description": "sample description"}
     default.update(**params)
     return Recipe.objects.create(**params)
@@ -30,6 +33,8 @@ class RecipeTest(TestCase):
         self.client = APIClient()
 
     def test_recipe_list_retrieval(self):
+        """Test all the recipes are returned when list is fetched"""
+
         recipe_1 = sample_recipe(
             name="French Onion Soup", description="So delicious"
         )
@@ -48,6 +53,7 @@ class RecipeTest(TestCase):
         self.assertEqual(res.data, serialize.data)
 
     def test_recipe_list_with_name_query(self):
+        """Test that only recipes with matching names are returned when name query used"""
         recipe_1 = sample_recipe(
             name="Meatloaf", description="Old-fashion american food"
         )
@@ -64,6 +70,7 @@ class RecipeTest(TestCase):
         self.assertIn(serializer_3.data, res.data)
 
     def test_recipe_detail_retrieval(self):
+        """Test that appropriate recipe is returned when requesting recipe detail by id"""
         recipe_1 = sample_recipe(
             name="Meatballs", description="Like your mom makes"
         )
@@ -77,6 +84,7 @@ class RecipeTest(TestCase):
         self.assertEqual(res.data, serializer_1.data)
 
     def test_recipe_creation_no_ingredients(self):
+        """Test recipe creates with no ingredients"""
         payload = {
             "name": "Butterscotch Cookies",
             "description": "Very meh",
@@ -92,6 +100,7 @@ class RecipeTest(TestCase):
             self.assertEqual(getattr(recipe, key), payload[key])
 
     def test_recipe_creation_no_description(self):
+        """Test that recipe creates with no description"""
         payload = {
             "name": "Butterscotch Cookies",
         }
@@ -106,6 +115,7 @@ class RecipeTest(TestCase):
             self.assertEqual(getattr(recipe, key), payload[key])
 
     def test_recipe_creation_with_ingredients(self):
+        """Test that recipe creates and adds ingredients"""
         ingredient_1 = {"name": "Bun"}
         ingredient_2 = {"name": "Sausage"}
         payload = {
@@ -125,6 +135,7 @@ class RecipeTest(TestCase):
         self.assertEqual(ingredient_2["name"], ingredients[1].name)
 
     def test_recipe_update_ingredients(self):
+        """Test patch adds new ingredients and removes the old ingredients"""
         recipe = sample_recipe(name="Hamburger", description="The safe option")
         sample_ingredient(name="ground beef", recipe=recipe)
         sample_ingredient(name="tomato", recipe=recipe)
@@ -144,6 +155,7 @@ class RecipeTest(TestCase):
         self.assertEqual(ingredient_1["name"], ingredient[0].name)
 
     def test_recipe_update_to_zero_ingredients(self):
+        """Test updating ingredients to empty array is allowed"""
         recipe = sample_recipe(name="Hamburger", description="The safe option")
         sample_ingredient(name="ground beef", recipe=recipe)
         sample_ingredient(name="tomato", recipe=recipe)
@@ -157,6 +169,7 @@ class RecipeTest(TestCase):
         self.assertEqual(recipe.ingredients.count(), 0)
 
     def test_recipe_update_name_and_description(self):
+        """Test updating of name and description is successful"""
         recipe = sample_recipe(
             name="Indian Curry", description="So many kinds"
         )
@@ -176,6 +189,7 @@ class RecipeTest(TestCase):
         self.assertEqual(recipe.description, payload["description"])
 
     def test_recipe_delete_succeeds(self):
+        """Test recipe deletion succeeds, and ingredients are deleted along with it"""
         recipe_1 = sample_recipe(
             name="Lomo Saltado", description="why french fries"
         )

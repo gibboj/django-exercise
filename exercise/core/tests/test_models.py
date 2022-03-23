@@ -7,6 +7,7 @@ class ModelTests(TestCase):
         self.recipe = Recipe.objects.create(name="Foo", description="bar")
 
     def test_recipe_model_str(self):
+        """Test that recipe model string is the name"""
         name = "Apple Pie"
         description = "The best of all Thanksgiving desserts"
         recipe = Recipe.objects.create(
@@ -16,18 +17,8 @@ class ModelTests(TestCase):
 
         self.assertEqual(str(recipe), name)
 
-    def test_recipe_with_ingredients(self):
-        name = "Goulash"
-        description = "I don't know what's in goulash"
-        recipe = Recipe.objects.create(
-            name=name,
-            description=description,
-        )
-        recipe.ingredients.create(name="Beef")
-
-        self.assertEqual(str(recipe), name)
-
     def test_ingredient_model_str(self):
+
         name = "Butter"
         recipe = self.recipe
         ingredient = Ingredient.objects.create(name=name, recipe=recipe)
