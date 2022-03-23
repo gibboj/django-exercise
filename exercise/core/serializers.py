@@ -24,14 +24,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create recipe and associated ingredients"""
-        ingredients = validated_data.pop("ingredients", None)
+        ingredients = validated_data.pop("ingredients", [])
         recipe = Recipe.objects.create(**validated_data)
 
-        if ingredients is not None:
-            for ingredient in ingredients:
-                Ingredient.objects.create(
-                    name=ingredient["name"], recipe=recipe
-                )
+        for ingredient in ingredients:
+            Ingredient.objects.create(name=ingredient["name"], recipe=recipe)
 
         return recipe
 
@@ -47,10 +44,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                 )
 
         super().update(validated_data=validated_data, instance=instance)
-
-        instance.description = validated_data.get(
-            "description", instance.description
-        )
 
         instance.save()
         return instance

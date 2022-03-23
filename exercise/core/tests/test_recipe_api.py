@@ -49,11 +49,12 @@ class RecipeTest(TestCase):
 
         recipes = Recipe.objects.all()
         serialize = RecipeSerializer(recipes, many=True)
-        self.assertEqual(len(recipes), 2)
+        self.assertEqual(recipes.count(), 2)
         self.assertEqual(res.data, serialize.data)
 
     def test_recipe_list_with_name_query(self):
-        """Test that only recipes with matching names are returned when name query used"""
+        """Test that only recipes with matching names are returned when name
+        query used"""
         recipe_1 = sample_recipe(
             name="Meatloaf", description="Old-fashion american food"
         )
@@ -70,7 +71,8 @@ class RecipeTest(TestCase):
         self.assertIn(serializer_3.data, res.data)
 
     def test_recipe_detail_retrieval(self):
-        """Test that appropriate recipe is returned when requesting recipe detail by id"""
+        """Test that appropriate recipe is returned when requesting recipe
+        detail by id"""
         recipe_1 = sample_recipe(
             name="Meatballs", description="Like your mom makes"
         )
@@ -189,7 +191,8 @@ class RecipeTest(TestCase):
         self.assertEqual(recipe.description, payload["description"])
 
     def test_recipe_delete_succeeds(self):
-        """Test recipe deletion succeeds, and ingredients are deleted along with it"""
+        """Test recipe deletion succeeds, and ingredients are deleted along
+        with it"""
         recipe_1 = sample_recipe(
             name="Lomo Saltado", description="why french fries"
         )

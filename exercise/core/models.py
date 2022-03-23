@@ -5,7 +5,7 @@ class Recipe(models.Model):
     """Model for recipes"""
 
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
