@@ -54,7 +54,7 @@ class RecipeTest(TestCase):
         recipe_2 = sample_recipe(name="Shashuka")
         recipe_3 = sample_recipe(name="Vegan Meatballs")
 
-        res = self.client.get(RECIPE_URL, {"name": "meat"})
+        res = self.client.get(RECIPE_URL, {"name": "mea"})
 
         serializer_1 = RecipeSerializer(recipe_1)
         serializer_2 = RecipeSerializer(recipe_2)
@@ -91,12 +91,26 @@ class RecipeTest(TestCase):
         for key in payload.keys():
             self.assertEqual(getattr(recipe, key), payload[key])
 
+    def test_recipe_creation_no_description(self):
+        payload = {
+            "name": "Butterscotch Cookies",
+        }
+
+        res = self.client.post(RECIPE_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        recipe = Recipe.objects.get(id=res.data["id"])
+
+        for key in payload.keys():
+            self.assertEqual(getattr(recipe, key), payload[key])
+
     def test_recipe_creation_with_ingredients(self):
         ingredient_1 = {"name": "Bun"}
         ingredient_2 = {"name": "Sausage"}
         payload = {
             "name": "Hot Dog",
-            "description": "How sad",
+            "description": "This doesn't need a recipe",
             "ingredients": [ingredient_1, ingredient_2],
         }
 
@@ -161,12 +175,14 @@ class RecipeTest(TestCase):
         self.assertEqual(recipe.name, payload["name"])
         self.assertEqual(recipe.description, payload["description"])
 
-    def test_recipe_delete(self):
+    def test_recipe_delete_succeeds(self):
         recipe_1 = sample_recipe(
             name="Lomo Saltado", description="why french fries"
         )
 
-        recipe_2 = sample_recipe(name="Kangaroo Steak", description="Meaty")
+        recipe_2 = sample_recipe(
+            name="Kangaroo Steak", description="Very gamey"
+        )
         ingredient = sample_ingredient("Kangaroo Steak", recipe=recipe_1)
         sample_ingredient("Salt", recipe=recipe_2)
 

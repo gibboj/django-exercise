@@ -30,3 +30,7 @@ Ingredients
 # POST
 /recipe
 :Create a new recipe, ingredients are optional
+
+# DELETE
+/recipe
+: Delete a recipe & it's ingredients
